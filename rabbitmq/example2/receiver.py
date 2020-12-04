@@ -10,7 +10,7 @@ def exec():
     connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
     channel = connection.channel()
 
-    channel.queue_declare(queue="testing")
+    channel.queue_declare(queue="testing", durable=True)
 
     def reader(channel, method, properties, body):
         print(f"message: {body.decode()}", end="\n")
@@ -19,9 +19,13 @@ def exec():
 
         print("done")
 
-    channel.basic_consume(
-        queue="testing", auto_ack="true", on_message_callback=reader
-    )
+        # if any worker chash the message was
+        # delivered to another functional worker
+        channel.basic_ack(delivery_tag=method.delivery_tag)
+
+    # send message to worker was free
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(queue="testing", on_message_callback=reader)
 
     print("waiting for messages ...")
 
