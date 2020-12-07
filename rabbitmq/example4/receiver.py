@@ -9,12 +9,17 @@ def exec():
     connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
     channel = connection.channel()
 
-    channel.exchange_declare(exchange="logs", exchange_type="fanout")
+    channel.exchange_declare(exchange="logs", exchange_type="direct")
 
     result = channel.queue_declare(queue="", exclusive=True)
     queue_name = result.method.queue
 
-    channel.queue_bind(exchange="logs", queue=queue_name)
+    severities = sys.argv[1:] or "info"
+
+    for severity in severities:
+        channel.queue_bind(
+            exchange="logs", queue=queue_name, routing_key=severity
+        )
 
     def reader(channel, method, properties, body):
         print(f"message: {body}", end="\n")
@@ -23,7 +28,7 @@ def exec():
         queue=queue_name, on_message_callback=reader, auto_ack=True
     )
 
-    print("waiting for messages ...")
+    print(f"waiting for messages with {severities} status")
 
     channel.start_consuming()
 
