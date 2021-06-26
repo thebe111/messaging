@@ -1,6 +1,27 @@
 # messaging
 
-### methods
+Concepts about message broker tools like RabbitQM, Apache Kafka
+
+### Status
+
+Completed
+
+### Content Table
+
+- [Used Technologies](#used-technologies)
+- [Methods](#methods)
+- [Tools](#tools)
+- [RabbitMQ](#rabbitmq)
+- [Basic Working Proccess](#basic-working-proccess)
+- [Exchange Types](#exchange-types)
+- [Author](#author)
+
+### Used Technologies
+
+- RabbitMQ
+- Python 3+
+
+### Methods
 
 - publisher subscriber system
 
@@ -14,12 +35,12 @@ when a message exceed your TTL (time to live) or was rejected, this message was 
 
 has a correlation ID to work if this method, when a reply if the same correlation ID was sended the message was processed
 
-### tools
+### Tools
 
 - rabbitmq
 - apache kafka
 
-### rabbitmq
+### Rabbitmq
 
 **how this work?**
 
@@ -29,14 +50,17 @@ this methods was called multiplexing connection
 
 obs: for each channel was created an thread
 
-### basic working proccess
+### Basic Working Proccess
 
 PUBLISHER => EXCHANGE => QUEUE => CONSUMER
 
-### exchange types
+### Exchange Types
 
 - direct: make a bind (proccess of connection) with a identifier string (routing key) to know what is the correct queue to send the incoming message
 - fanout: send the incoming message for all consumers (broadcast)
 - topic: has more advanced configuration to work with delivery proccess
 - headers: work with package header 
 
+### Author
+
+@thebe111
